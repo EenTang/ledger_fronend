@@ -12,7 +12,7 @@
               </el-table-column>
               <el-table-column prop="unit" label="单位" width="80">
               </el-table-column>
-              <el-table-column prop="summation" label="总计" width="80">
+              <el-table-column prop="total_price" label="总计" width="80">
               </el-table-column>
               <el-table-column prop="date" label="最后更新日期" width="160">
               </el-table-column>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    import C_PageSize from '@/components/PageSize'
+    import Pagination from '@/components/Pagination'
     export default {
         data() {
           const item = {
@@ -32,7 +32,7 @@
             quantity: 20,
             unitPrice: 50,
             unit: "斤",
-            summation: 1000,
+            total_price: 1000,
             date: '2020-05-24 18:00:00'
           };
           return {
@@ -42,7 +42,7 @@
         methods: {
         },
         components: {
-          "common-pg": C_PageSize
+          "common-pg": Pagination
         }
     }
 </script>

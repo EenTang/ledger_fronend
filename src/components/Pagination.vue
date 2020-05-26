@@ -8,12 +8,21 @@
 <script>
     export default{
         name: "common-pg",
+        props: {
+            total: {
+              type: Number,
+              default: 20
+            },
+            // pageSize: {
+            //   type: Number,
+            //   default: 10
+            // },
+        },
         data(){
             return {
-                total: 20,
+                pageSizes: [10, 20, 50, 100],
                 page: 1,
-                pageSize: 10,
-                pageSizes: [10, 20, 50, 100]
+                pageSize: 10
             }
          },
         methods: {

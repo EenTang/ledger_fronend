@@ -27,8 +27,8 @@ export default {
   inheritAttrs: false,
   props: {
     value: {
-      type: String,
-      default: ""
+      // type: String,
+      // default: ""
     },
     toolTipContent: {
       type: String,
