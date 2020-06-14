@@ -1,8 +1,8 @@
 /*
 * @Author: Tang Jiandong
 * @Date:   2020-06-09 23:22:48
-* @Last Modified by:   Tang Jiandong
-* @Last Modified time: 2020-06-13 23:48:54
+* @Last Modified by:   tang
+* @Last Modified time: 2020-06-14 23:15:47
 */
 import axios from "axios";
 import { Message } from 'element-ui';
@@ -53,6 +53,15 @@ export function post(url, params){
 export function remove(url, params){
     return new Promise((resolve, reject) => {
         axios.delete(url, {params: params})
+        .then(response => resolve(response))
+        .catch(error => console.log(error))
+    })
+};
+
+
+export function update(url, params){
+    return new Promise((resolve, reject) => {
+        axios.put(url, {data: params})
         .then(response => resolve(response))
         .catch(error => console.log(error))
     })

@@ -46,12 +46,24 @@
             <el-table-column prop="client_name" label="姓名" width="80">
             </el-table-column>
             <el-table-column prop="goods" label="商品" width="80">
+              <editable-cell :show-input="row.editMode" slot-scope="{row}" v-model="row.goods">
+                <span slot="content">{{row.goods}}</span>
+              </editable-cell>
             </el-table-column>
             <el-table-column prop="quantity" label="数量" width="80">
+              <editable-cell :show-input="row.editMode" slot-scope="{row}" v-model="row.quantity">
+                <span slot="content">{{row.quantity}}</span>
+              </editable-cell>
             </el-table-column>
             <el-table-column prop="unit_price" label="单价" width="80">
+              <editable-cell :show-input="row.editMode" slot-scope="{row}" v-model="row.unit_price">
+                <span slot="content">{{row.unit_price}}</span>
+              </editable-cell>
             </el-table-column>
             <el-table-column prop="unit" label="单位" width="80">
+              <editable-cell :show-input="row.editMode" slot-scope="{row}" v-model="row.unit">
+                <span slot="content">{{row.unit}}</span>
+              </editable-cell>
             </el-table-column>
             <el-table-column prop="total_price" label="总计" width="80">
             </el-table-column>
@@ -59,9 +71,14 @@
             </el-table-column>
             <el-table-column label="操作" min-width="250">
               <template slot-scope="scope">
-                <el-tooltip content="删除" placement="top">
-                    <el-button type="danger" size="small" icon="el-icon-delete" @click="remove(scope.$index, scope.row)"></el-button>
-                </el-tooltip>
+                <el-button-group>
+                  <el-tooltip content="修改" placement="top">
+                      <el-button type="primary" size="small" icon="el-icon-edit" @click="edit(scope.$index, scope.row)"></el-button>
+                  </el-tooltip>
+                  <el-tooltip content="删除" placement="top">
+                      <el-button type="danger" size="small" icon="el-icon-delete" @click="remove(scope.$index, scope.row)"></el-button>
+                  </el-tooltip>
+                </el-button-group>
               </template>
             </el-table-column>
           </el-table>
@@ -72,15 +89,17 @@
 
 <script>
     import Pagination from '@/components/Pagination';
+    import EditableCell from "@/components/EditableCell";
     import axios from 'axios';
     import { getClientInfo, getIncomeDetails,
-             addIncomeDetails, deleteIncomeDetail} from "@/request/api";
+             addIncomeDetails, deleteIncomeDetail, updateIncomeDetail} from "@/request/api";
     import qs from "qs"
     export default {
         data() {
           return {
-            details: null,
-            data: null,
+            details: {
+              data: []
+            },
             query: '',
             addFormVisible: false,
             formLabelWidth: '80px',
@@ -158,6 +177,9 @@
           success: function(message){
             this.$message({message: message, type: "success"})
           },
+          fail: function(message){
+            this.$message({message: message, type: "fail"})
+          },
           remove: function(index, row){
             console.log("###row", index, row)
             deleteIncomeDetail({"detail_id": row.detail_id})
@@ -166,6 +188,20 @@
               getIncomeDetails({store_id: 1})
               .then(res => {this.details = res.data});
             })
+          },
+          edit: function(index, row){
+            updateIncomeDetail(row)
+            .then(res => {
+              this.success("更新成功");
+              getIncomeDetails({store_id: 1})
+              .then(res => {this.details = res.data});
+            })
+            .catch(err => {this.fail("更新失败")})
+          },
+          resetPartFields(){
+            this.form.goods = "";
+            this.form.quantity = 0;
+            this.form.unit_price = 0;
           },
           submitForm(formName){
             this.$refs[formName].validate((valid) =>{
@@ -178,16 +214,19 @@
                     unit: this.form.unit,
                     unit_price: this.form.unit_price};
                 addIncomeDetails(params
-                  ).then(res => {this.success("添加成功！")})
-              this.$refs[formName].resetFields();
-              getIncomeDetails({store_id: 1})
-              .then(res => {this.details = res.data});
+                  ).then(res => {
+                    this.success("添加成功！");
+                    getIncomeDetails({store_id: 1})
+                    .then(res => {this.details = res.data});
+                  })
+              this.resetPartFields();
               };
             });
           },
         },
         components: {
-          "common-pg": Pagination
+          "common-pg": Pagination,
+          "editable-cell": EditableCell
         },
         mounted(){
           getIncomeDetails({store_id: 1})
