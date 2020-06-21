@@ -2,7 +2,7 @@
 * @Author: Tang Jiandong
 * @Date:   2020-06-09 23:22:48
 * @Last Modified by:   tang
-* @Last Modified time: 2020-06-14 23:15:47
+* @Last Modified time: 2020-06-21 09:57:12
 */
 import axios from "axios";
 import { Message } from 'element-ui';
@@ -42,7 +42,7 @@ export function get(url, params){
 
 export function post(url, params){
     return new Promise((resolve, reject) => {
-        axios.post(url, {data: params})
+        axios.post(url, params)
         .then(response => resolve(response))
         .catch(error => console.log(error))
     })

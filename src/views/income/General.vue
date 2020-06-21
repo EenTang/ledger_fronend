@@ -13,9 +13,6 @@
 
     <el-table :data="tableData" stripe height="100%" :default-sort = "{prop: 'date', order: 'descending'}">
       <el-table-column prop="name" label="姓名" fixed="left" :width="width" sortable>
-        <editable-cell :show-input="row.editMode" slot-scope="{row}" v-model="row.name">
-          <span slot="content">{{row.name}}</span>
-        </editable-cell>
       </el-table-column>
       <el-table-column prop="debt" label="欠款" :width="width">
       </el-table-column>
@@ -30,15 +27,6 @@
         </editable-cell>
       </el-table-column>
       <el-table-column prop="date" label="最后更新日期" width="160" sortable>
-         <editable-cell
-         :show-input="row.editMode"
-         slot-scope="{row}"
-         editable-component="el-date-picker"
-         format="yyyy-MM-dd"
-         value-format="yyyy-MM-dd"
-         v-model="row.date">
-          <span slot="content">{{row.date}}</span>
-        </editable-cell>
       </el-table-column>
       <el-table-column label="操作" min-width="250">
           <template slot-scope="scope">
@@ -112,6 +100,8 @@
 <script>
     import Pagination from '@/components/Pagination';
     import EditableCell from "@/components/EditableCell";
+    import { getIncomeGeneral, addIncomeGeneral,
+             updateIncomeGeneral, deleteIncomeGeneral} from "@/request/api";
     export default {
         data() {
           const item = {
