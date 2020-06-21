@@ -93,7 +93,7 @@
     import axios from 'axios';
     import { getClientInfo, getIncomeDetails,
              addIncomeDetails, deleteIncomeDetail, updateIncomeDetail} from "@/request/api";
-    import qs from "qs"
+    import { incomeDetailRule, success, fail } from "@/common"
     export default {
         data() {
           return {
@@ -115,48 +115,7 @@
               unit_price: 0,
               unit: ''
             },
-            rules: {
-              client_id: [
-                {required: true, message: "请输入姓名", trigger: "blur"}
-              ],
-              goods: [
-                {required: true, message: "请输入商品", trigger: "blur"}
-              ],
-              quantity: [
-                {required: true, message: "请输入数量", trigger: "blur"},
-                {
-                  validator(rule, value, callback)  {
-                      var num2 = /^([1-9][\d]{0,}|0)(\.\d{1,2})?$/
-                      value = '' + value
-                      if (isNaN(value) || !(num2.test(value))) {
-                          callback(new Error('请输入数字, 保留2位小数'));
-                      } else {
-                          callback();
-                      }
-                  },
-                  trigger: 'blur'
-                }
-              ],
-              unit: [
-                {required: true, message: "请输入单位", trigger: "blur"}
-              ],
-              unit_price: [
-                {required: true, message: "请输入单价", trigger: "blur"},
-                {
-                  validator(rule, value, callback)  {
-                      var num2 = /^([1-9][\d]{0,}|0)(\.\d{1,2})?$/
-                      value = '' + value
-                      if (isNaN(value) || !(num2.test(value))) {
-                          callback(new Error('请输入数字, 保留2位小数'));
-                      } else {
-                          callback();
-                      }
-                  },
-                  trigger: 'blur'
-                }
-              ],
-
-            },
+            rules: incomeDetailRule(true),
           }
         },
 
@@ -174,17 +133,14 @@
             };
             this.loading = false;
           },
-          success: function(message){
-            this.$message({message: message, type: "success"})
-          },
-          fail: function(message){
-            this.$message({message: message, type: "fail"})
+          search(){
+            getIncomeDetails({store_id: 1, client_name: this.query})
+            .then(res => {this.details = res.data});
           },
           remove: function(index, row){
-            console.log("###row", index, row)
             deleteIncomeDetail({"detail_id": row.detail_id})
             .then(res => {
-              this.success("删除成功！");
+              success("删除成功！");
               getIncomeDetails({store_id: 1})
               .then(res => {this.details = res.data});
             })
@@ -192,11 +148,11 @@
           edit: function(index, row){
             updateIncomeDetail(row)
             .then(res => {
-              this.success("更新成功");
+              success("更新成功");
               getIncomeDetails({store_id: 1})
               .then(res => {this.details = res.data});
             })
-            .catch(err => {this.fail("更新失败")})
+            .catch(err => {fail("更新失败")})
           },
           resetPartFields(){
             this.form.goods = "";
@@ -215,7 +171,7 @@
                     unit_price: this.form.unit_price};
                 addIncomeDetails(params
                   ).then(res => {
-                    this.success("添加成功！");
+                    success("添加成功！");
                     getIncomeDetails({store_id: 1})
                     .then(res => {this.details = res.data});
                   })

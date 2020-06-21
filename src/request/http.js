@@ -2,7 +2,7 @@
 * @Author: Tang Jiandong
 * @Date:   2020-06-09 23:22:48
 * @Last Modified by:   tang
-* @Last Modified time: 2020-06-21 09:57:12
+* @Last Modified time: 2020-06-21 23:31:09
 */
 import axios from "axios";
 import { Message } from 'element-ui';
@@ -54,15 +54,23 @@ export function remove(url, params){
     return new Promise((resolve, reject) => {
         axios.delete(url, {params: params})
         .then(response => resolve(response))
-        .catch(error => console.log(error))
+        .catch(error => reject(error))
     })
 };
 
 
 export function update(url, params){
     return new Promise((resolve, reject) => {
-        axios.put(url, {data: params})
+        axios.put(url, params)
         .then(response => resolve(response))
         .catch(error => console.log(error))
     })
 };
+
+export function patch(url, params){
+    return new Promise((resolve, reject) => {
+        axios.patch(url, params)
+        .then(response => resolve(response))
+        .catch(error => console.log(error))
+    })
+}
